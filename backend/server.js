@@ -29,6 +29,10 @@ const alertSchema = new mongoose.Schema({
 
 const Alert = mongoose.model("Alert", alertSchema);
 
+app.get("/", (req, res) => {
+  res.json("server for optos alerts")
+})
+
 // Route to create alerts
 app.post("/api/alerts", async (req, res) => {
   const alertData = req.body;
@@ -48,7 +52,7 @@ setInterval(async () => {
       );
   
       if (checkAlertCondition(currentPrice, alert)) {
-        await sendTelegramNotification(alert.telegramId, currentPrice);
+        await sendTelegramNotification(alert.telegramId, currentPrice, alert.selectedChain, alert.selectedToken, alert.preferredCurrency);
       }
     });
   }, 10000);
@@ -92,9 +96,9 @@ const checkAlertCondition = (currentPrice, alert) => {
 };
 
 // Function to send Telegram notification
-const sendTelegramNotification = async (telegramId, price) => {
-  const botToken = process.env.BOT_TOKEN; // Your Telegram bot token
-  const message = `Price alert triggered! Current price: ${price}`;
+const sendTelegramNotification = async (telegramId, price, selectedChain, selectedToken, preferredCurrency) => {
+  const botToken = process.env.BOT_TOKEN;
+  const message = `Price alert triggered for ${selectedChain}-${selectedToken}! Current price: ${preferredCurrency} ${price}`;
   console.log(message, botToken)
 
   try {

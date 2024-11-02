@@ -67,7 +67,7 @@ const PriceAlertUI = () => {
     ],
     queryFn: () =>
       getTokenPrice(selectedChain, selectedToken?.address, preferredCurrency),
-    // refetchInterval: selectedToken ? 30000 : false,
+    refetchInterval: selectedToken ? 10000 : false,
     enabled: selectedToken ? true : false,
   });
 
